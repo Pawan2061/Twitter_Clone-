@@ -6,17 +6,28 @@ import { LoginDto } from './dto/logindto';
 import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from 'src/prisma/prisma.service';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private mailService: MailService,
   ) {}
 
   async signUp(dto: SignUpDto): Promise<object> {
     try {
       const hash = await bcrypt.hash(dto.password, 10);
+      const User = await this.prisma.user.findFirst({
+        where: {
+          username: dto.username,
+        },
+      });
+
+      if (!!User) {
+        return { message: `${User.username} is already signed up` };
+      }
       const user = await this.prisma.user.create({
         data: {
           id: dto.id,
@@ -26,6 +37,7 @@ export class AuthService {
           username: dto.username,
         },
       });
+      await this.mailService.sendVerificationMail(user.email, user.id);
 
       return {
         message: {
