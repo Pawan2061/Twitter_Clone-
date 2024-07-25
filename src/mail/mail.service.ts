@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Transporter, createTransport } from 'nodemailer';
+import { Transporter, createTransport, getTestMessageUrl } from 'nodemailer';
 
 @Injectable()
 export class MailService {
@@ -23,17 +23,23 @@ export class MailService {
       console.log('sending mail tp', email);
       console.log(this.configService.get('MAIL_FROM'));
 
-      const result = await this.transporter.sendMail({
-        from: `noreply${this.configService.get('MAIL_FROM')}`,
-        to: email,
-        subject: 'Welcome to twitter',
-        html: `
+      await this.transporter
+        .sendMail({
+          from: `noreply${this.configService.get('MAIL_FROM')}`,
+          to: email,
+          subject: 'Welcome to twitter',
+          html: `
           <a href='${url}'>verify</a>
         
       `,
-      });
+        })
+        .then((info: any) => {
+          console.log(getTestMessageUrl(info));
+        })
+        .catch(() => {
+          console.log('couldnt send');
+        });
 
-      console.log(result);
       console.log('mail sent successfully');
 
       return { message: 'mail sent successfully' };
