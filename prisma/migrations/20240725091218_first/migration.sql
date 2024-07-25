@@ -1,9 +1,12 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "username" TEXT,
+    "username" TEXT NOT NULL,
     "bio" TEXT,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "isVerified" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
