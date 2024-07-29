@@ -4,12 +4,14 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { Public } from 'src/common/public.decorator';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signupdto';
 import { LoginDto } from './dto/logindto';
+import { UpdateUserDto } from './dto/updateUserdto';
 
 @Controller('auth')
 export class AuthController {
@@ -37,5 +39,17 @@ export class AuthController {
   @Get('/:id')
   getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.authService.getUserById(id);
+  }
+
+  @Patch('/:id')
+  updateInfo(
+    @Body() dto: UpdateUserDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.authService.updateInfo(dto, id);
+  }
+  @Patch('/verify/:id')
+  verifyUser(@Param('id', ParseIntPipe) id: number) {
+    return this.authService.verifyUser(id);
   }
 }

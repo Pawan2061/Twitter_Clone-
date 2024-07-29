@@ -7,6 +7,8 @@ import * as bcrypt from 'bcrypt';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MailService } from 'src/mail/mail.service';
+import { UpdateUserDto } from './dto/updateUserdto';
+import { use } from 'passport';
 
 @Injectable()
 export class AuthService {
@@ -84,18 +86,60 @@ export class AuthService {
     };
   }
 
-  async getUserById(id: number) {
+  async getUserById(id: number): Promise<object> {
     const user = await this.prisma.user.findFirst({
       where: {
         id: id,
       },
     });
     if (!user) {
-      return 'cannot find user';
+      return { message: 'cannot find user' };
     }
 
     return {
       user: user,
     };
+  }
+  async updateInfo(dto: UpdateUserDto, id: number) {
+    try {
+      const newUser = await this.prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          email: dto.email,
+          username: dto.username,
+        },
+      });
+
+      return {
+        message: `${newUser.username} is updated`,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+
+  async verifyUser(id: number) {
+    try {
+      const user = await this.prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          isVerified: true,
+        },
+      });
+
+      return {
+        message: `${user.username} is verified`,
+      };
+    } catch (error) {
+      return {
+        error: error,
+      };
+    }
   }
 }
