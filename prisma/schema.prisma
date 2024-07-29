@@ -22,4 +22,13 @@ model User{
 
     created_at  DateTime   @default(now())
     isVerified   Boolean   @default(false)
+
+    tweets Tweet[]
+
+}
+
+model Tweet{
+  id Int @id @default(autoincrement())
+  author  User  @relation(fields:[authorId],references:[id])
+  authorId  Int
 }
