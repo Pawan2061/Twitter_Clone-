@@ -72,4 +72,30 @@ export class AuthService {
       return error.message;
     }
   }
+
+  async getUsers() {
+    const users = await this.prisma.user.findMany();
+    if (!users) {
+      throw new Error('NO users found ');
+    }
+
+    return {
+      users: users,
+    };
+  }
+
+  async getUserById(id: number) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    if (!user) {
+      return 'cannot find user';
+    }
+
+    return {
+      user: user,
+    };
+  }
 }
