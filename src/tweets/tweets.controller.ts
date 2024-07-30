@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -25,8 +26,15 @@ export class TweetsController {
   getTweets() {
     return this.tweetService.getTweets();
   }
+
+  @Public()
   @Get('/:id')
   getTweetById(@Param('id', ParseIntPipe) id: number) {
     return this.tweetService.getTweetById(id);
+  }
+
+  @Delete('/:id')
+  deleteTweet(@Param('id', ParseIntPipe) id: number) {
+    return this.tweetService.deleteTweet(id);
   }
 }

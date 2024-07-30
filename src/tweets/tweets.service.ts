@@ -67,4 +67,22 @@ export class TweetService {
       };
     }
   }
+
+  async deleteTweet(id: number) {
+    try {
+      await this.prismaService.tweet.delete({
+        where: {
+          id: id,
+        },
+      });
+
+      return {
+        deletionResponse: 'The tweet is deleted',
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
 }
