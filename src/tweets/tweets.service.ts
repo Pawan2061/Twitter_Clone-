@@ -1,6 +1,7 @@
 import { Injectable, RequestTimeoutException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTweetDto } from './dto/createTweet.dto';
+import { count } from 'console';
 
 @Injectable()
 export class TweetService {
@@ -157,6 +158,31 @@ export class TweetService {
 
       return {
         respone: `${tweetId} is disliked`,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+  async unsavedTweet(tweetId: number, user: any) {
+    try {
+      const unsavedTweet = await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          savedTweets: {
+            // used to remove the likedTweet
+            disconnect: {
+              id: tweetId,
+            },
+          },
+        },
+      });
+
+      return {
+        respone: `${tweetId} is unsaved`,
       };
     } catch (error) {
       return {

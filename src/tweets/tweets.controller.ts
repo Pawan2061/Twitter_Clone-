@@ -53,4 +53,8 @@ export class TweetsController {
   saveTweet(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
     return this.tweetService.saveTweet(id, req.user);
   }
+  @Patch('/:id/unsaved')
+  unsavTweet(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+    return this.tweetService.unsavedTweet(id, req.user);
+  }
 }
