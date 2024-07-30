@@ -37,19 +37,16 @@ export class AuthController {
 
   @Public()
   @Get('/:id')
-  getUserById(@Param('id', ParseIntPipe) id: number) {
+  getUserById(@Param('id') id: string) {
     return this.authService.getUserById(id);
   }
 
   @Patch('/:id')
-  updateInfo(
-    @Body() dto: UpdateUserDto,
-    @Param('id', ParseIntPipe) id: number,
-  ) {
+  updateInfo(@Body() dto: UpdateUserDto, @Param('id') id: string) {
     return this.authService.updateInfo(dto, id);
   }
   @Patch('/verify/:id')
-  verifyUser(@Param('id', ParseIntPipe) id: number) {
+  verifyUser(@Param('id') id: string) {
     return this.authService.verifyUser(id);
   }
 }

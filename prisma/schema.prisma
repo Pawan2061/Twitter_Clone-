@@ -39,7 +39,7 @@ model Tweet {
 
   author User @relation("tweeted", fields: [authorId], references: [id])
 
-  authorId String @unique
+  authorId String
 
   likes   User[] @relation("likes")
   savedBy User[] @relation("saved")

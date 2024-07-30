@@ -39,7 +39,7 @@ export class AuthService {
           username: dto.username,
         },
       });
-      await this.mailService.sendVerificationMail(user.email, user.id);
+      await this.mailService.sendVerificationMail(user.email, Number(user.id));
 
       return {
         message: {
@@ -86,7 +86,7 @@ export class AuthService {
     };
   }
 
-  async getUserById(id: number): Promise<object> {
+  async getUserById(id: string): Promise<object> {
     const user = await this.prisma.user.findFirst({
       where: {
         id: id,
@@ -100,7 +100,7 @@ export class AuthService {
       user: user,
     };
   }
-  async updateInfo(dto: UpdateUserDto, id: number) {
+  async updateInfo(dto: UpdateUserDto, id: string) {
     try {
       const newUser = await this.prisma.user.update({
         where: {
@@ -122,7 +122,7 @@ export class AuthService {
     }
   }
 
-  async verifyUser(id: number) {
+  async verifyUser(id: string) {
     try {
       const user = await this.prisma.user.update({
         where: {
