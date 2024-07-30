@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MailModule } from './mail/mail.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt.guard';
+import { TweetModule } from './tweets/tweets.module';
 @Module({
   imports: [
     PrismaModule,
@@ -16,6 +17,7 @@ import { JwtAuthGuard } from './auth/jwt.guard';
       isGlobal: true,
     }),
     MailModule,
+    TweetModule,
   ],
   controllers: [AppController],
   providers: [
