@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { TweetService } from './tweets.service';
 import { CreateTweetDto } from './dto/createTweet.dto';
 import { Public } from 'src/common/public.decorator';
@@ -16,5 +24,9 @@ export class TweetsController {
   @Get('')
   getTweets() {
     return this.tweetService.getTweets();
+  }
+  @Get('/:id')
+  getTweetById(@Param('id', ParseIntPipe) id: number) {
+    return this.tweetService.getTweetById(id);
   }
 }

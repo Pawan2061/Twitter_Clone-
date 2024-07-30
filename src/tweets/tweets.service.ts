@@ -44,4 +44,27 @@ export class TweetService {
       };
     }
   }
+
+  async getTweetById(id: number) {
+    try {
+      const tweet = await this.prismaService.tweet.findFirst({
+        where: {
+          id: id,
+        },
+      });
+      if (!tweet) {
+        return {
+          errormessage: 'No such tweet found',
+        };
+      }
+
+      return {
+        givenTweet: tweet,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
 }
