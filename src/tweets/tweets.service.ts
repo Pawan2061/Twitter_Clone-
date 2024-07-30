@@ -14,10 +14,12 @@ export class TweetService {
           caption: dto.caption,
           authorId: user.id,
         },
+
         include: {
           likes: true,
         },
       });
+
       return {
         tweet: tweet.caption,
       };
