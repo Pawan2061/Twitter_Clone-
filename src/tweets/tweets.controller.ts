@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Req,
 } from '@nestjs/common';
@@ -36,5 +37,20 @@ export class TweetsController {
   @Delete('/:id')
   deleteTweet(@Param('id', ParseIntPipe) id: number) {
     return this.tweetService.deleteTweet(id);
+  }
+
+  @Patch('/:id/liked')
+  likeTweet(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+    return this.tweetService.likeTweet(id, req.user);
+  }
+
+  @Patch('/:id/removeLike')
+  dislikeTweet(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+    return this.tweetService.dislikeTweet(id, req.user);
+  }
+
+  @Patch('/:id/save')
+  saveTweet(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+    return this.tweetService.saveTweet(id, req.user);
   }
 }

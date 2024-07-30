@@ -85,4 +85,83 @@ export class TweetService {
       };
     }
   }
+  async likeTweet(tweetId: number, user: any) {
+    try {
+      const updatedUser = await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          likedTweets: {
+            connect: [
+              {
+                id: tweetId,
+              },
+            ],
+          },
+        },
+      });
+
+      return {
+        response: `${tweetId} is liked`,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+  async saveTweet(tweetId: number, user: any) {
+    try {
+      const saved = await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          savedTweets: {
+            // used to add the likedTweet
+            connect: [
+              {
+                id: tweetId,
+              },
+            ],
+          },
+        },
+      });
+
+      return {
+        respones: `${tweetId} is saved`,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+
+  async dislikeTweet(tweetId: number, user: any) {
+    try {
+      const dislikedTweet = await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          likedTweets: {
+            // used to remove the likedTweet
+            disconnect: {
+              id: tweetId,
+            },
+          },
+        },
+      });
+
+      return {
+        respone: `${tweetId} is disliked`,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
 }
