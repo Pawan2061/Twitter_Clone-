@@ -1,8 +1,9 @@
-import { Injectable, RequestTimeoutException } from '@nestjs/common';
+import { Delete, Injectable, RequestTimeoutException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTweetDto } from './dto/createTweet.dto';
 import { count } from 'console';
 import { CreateCommentDto } from './dto/createComment.dto';
+import { UpdateCommentDto } from './dto/updateComment.dto';
 
 @Injectable()
 export class TweetService {
@@ -194,7 +195,7 @@ export class TweetService {
     }
   }
 
-  async comment(postId: number, dto: CreateCommentDto, user: any) {
+  async comment(tweetId: number, dto: CreateCommentDto, user: any) {
     try {
       console.log('reached here');
       console.log(dto.comment);
@@ -202,7 +203,7 @@ export class TweetService {
 
       const comment = await this.prismaService.comment.create({
         data: {
-          tweetId: postId,
+          tweetId: tweetId,
           comment: dto.comment,
           userId: user.id,
         },
@@ -212,7 +213,7 @@ export class TweetService {
       });
       await this.prismaService.tweet.update({
         where: {
-          id: postId,
+          id: tweetId,
         },
         data: {
           comments: {
@@ -229,6 +230,79 @@ export class TweetService {
     } catch (error) {
       console.log(error);
 
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+
+  async showComments(tweetId: number) {
+    try {
+      const comments = await this.prismaService.comment.findMany({
+        where: {
+          tweetId: tweetId,
+        },
+      });
+
+      return {
+        comments: comments,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+  async showCommentById(commentId: string) {
+    try {
+      const comment = await this.prismaService.comment.findFirst({
+        where: {
+          id: commentId,
+        },
+      });
+
+      return {
+        response: comment,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+
+  async updateComment(commentId: string, dto: UpdateCommentDto) {
+    try {
+      const updatedComment = await this.prismaService.comment.update({
+        where: {
+          id: commentId,
+        },
+        data: {
+          comment: dto.comment,
+        },
+      });
+
+      return {
+        updatedComment: ` ${updatedComment.comment} is updated`,
+      };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+
+  async deleteComment(commentId: string) {
+    try {
+      const comment = await this.prismaService.comment.delete({
+        where: {
+          id: commentId,
+        },
+      });
+      return {
+        response: `${comment.id} is deleted`,
+      };
+    } catch (error) {
       return {
         errorMessage: error,
       };

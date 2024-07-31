@@ -13,6 +13,7 @@ import { TweetService } from './tweets.service';
 import { CreateTweetDto } from './dto/createTweet.dto';
 import { Public } from 'src/common/public.decorator';
 import { CreateCommentDto } from './dto/createComment.dto';
+import { UpdateCommentDto } from './dto/updateComment.dto';
 
 @Controller('tweets')
 export class TweetsController {
@@ -66,5 +67,23 @@ export class TweetsController {
     @Req() req: any,
   ) {
     return this.tweetService.comment(id, dto, req.user);
+  }
+
+  @Get('/:id/comments')
+  getComment(@Param('id', ParseIntPipe) id: number) {
+    return this.tweetService.showComments(id);
+  }
+
+  @Get('/:id/comments/:commentId')
+  getCommentById(@Param('commentId') commentId: string) {
+    return this.tweetService.showCommentById(commentId);
+  }
+
+  @Patch('/:id/comments/:commentId')
+  updateComment(
+    @Param('commentId') commentId: string,
+    @Body() dto: UpdateCommentDto,
+  ) {
+    return this.tweetService.updateComment(commentId, dto);
   }
 }
