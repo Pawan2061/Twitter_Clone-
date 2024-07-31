@@ -12,6 +12,7 @@ import {
 import { TweetService } from './tweets.service';
 import { CreateTweetDto } from './dto/createTweet.dto';
 import { Public } from 'src/common/public.decorator';
+import { CreateCommentDto } from './dto/createComment.dto';
 
 @Controller('tweets')
 export class TweetsController {
@@ -56,5 +57,14 @@ export class TweetsController {
   @Patch('/:id/unsaved')
   unsavTweet(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
     return this.tweetService.unsavedTweet(id, req.user);
+  }
+
+  @Patch('/:id/comment')
+  comment(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CreateCommentDto,
+    @Req() req: any,
+  ) {
+    return this.tweetService.comment(id, dto, req.user);
   }
 }

@@ -2,6 +2,7 @@ import { Injectable, RequestTimeoutException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTweetDto } from './dto/createTweet.dto';
 import { count } from 'console';
+import { CreateCommentDto } from './dto/createComment.dto';
 
 @Injectable()
 export class TweetService {
@@ -187,6 +188,47 @@ export class TweetService {
         respone: `${tweetId} is unsaved`,
       };
     } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+
+  async comment(postId: number, dto: CreateCommentDto, user: any) {
+    try {
+      console.log('reached here');
+      console.log(dto.comment);
+      console.log(dto, 'here');
+
+      const comment = await this.prismaService.comment.create({
+        data: {
+          tweetId: postId,
+          comment: dto.comment,
+          userId: user.id,
+        },
+        include: {
+          commentor: true,
+        },
+      });
+      await this.prismaService.tweet.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          comments: {
+            connect: {
+              id: comment.id,
+            },
+          },
+        },
+      });
+
+      return {
+        message: `${comment.id} is posted`,
+      };
+    } catch (error) {
+      console.log(error);
+
       return {
         errorMessage: error,
       };
