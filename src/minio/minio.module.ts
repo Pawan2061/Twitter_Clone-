@@ -5,11 +5,14 @@ import { MinioService } from './minio.service';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     NestMinioModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         endPoint: configService.get('MINIO_ENDPOINT'),
-        port: configService.get('MINIO_PORT'),
+        port: Number(configService.get('MINIO_PORT')),
         useSSL: false,
         accessKey: configService.get('MINIO_ACCESS_KEY'),
         secretKey: configService.get('MINIO_SECRET_KEY'),

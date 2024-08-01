@@ -23,6 +23,9 @@ model User {
   created_at DateTime @default(now())
   isVerified Boolean  @default(false)
 
+  twitterProfileUrl String?
+  twitterProfileKey String?
+
   comments Comment[] @relation("commented")
   tweets   Tweet[]   @relation("tweeted")
 
@@ -36,6 +39,9 @@ model Tweet {
   caption    String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+
+  imagesKey String[]
+  imagesUrl String[]
 
   author User @relation("tweeted", fields: [authorId], references: [id])
 

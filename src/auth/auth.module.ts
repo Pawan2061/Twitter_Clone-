@@ -7,11 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constant';
 import { MailModule } from 'src/mail/mail.module';
 import { JwtStrategy } from './auth.strategy';
+import { MinioModule } from 'src/minio/minio.module';
 
 @Module({
   imports: [
     PrismaModule,
     PassportModule,
+    MinioModule,
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
