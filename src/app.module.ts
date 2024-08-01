@@ -9,9 +9,11 @@ import { MailModule } from './mail/mail.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt.guard';
 import { TweetModule } from './tweets/tweets.module';
+import { MinioModule } from './minio/minio.module';
 @Module({
   imports: [
     PrismaModule,
+    MinioModule,
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
