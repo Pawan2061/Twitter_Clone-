@@ -37,6 +37,8 @@ export class MinioService {
   ) {
     await this.client.removeObject(bucketName, objectName);
   }
+
+  async updateProfile(key: string, bucketName: string = this.bucketName) {}
   async getFileUrl(key: string) {
     return `${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${process.env.MINIO_BUCKET_NAME}/${key}`;
   }

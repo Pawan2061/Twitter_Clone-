@@ -4,17 +4,39 @@ import { CreateTweetDto } from './dto/createTweet.dto';
 import { count } from 'console';
 import { CreateCommentDto } from './dto/createComment.dto';
 import { UpdateCommentDto } from './dto/updateComment.dto';
+import { randomUUID } from 'crypto';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class TweetService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private minioService: MinioService,
+  ) {}
 
-  async createTweet(dto: CreateTweetDto, user: any) {
+  async createTweet(
+    dto: CreateTweetDto,
+    user: any,
+    images: Express.Multer.File[],
+  ) {
     try {
+      const tweetImageKey: string[] = [];
+      const tweetImageUrl: string[] = [];
+
+      for (const image of images) {
+        const imageKey = randomUUID();
+        tweetImageKey.push(imageKey);
+        const imageUrl = await this.minioService.getFileUrl(imageKey);
+        tweetImageUrl.push(imageUrl);
+        await this.minioService.upload(image.buffer, imageKey);
+      }
+
       const tweet = await this.prismaService.tweet.create({
         data: {
           caption: dto.caption,
           authorId: user.id,
+          imagesKey: tweetImageKey,
+          imagesUrl: tweetImageUrl,
         },
 
         include: {
@@ -23,7 +45,7 @@ export class TweetService {
       });
 
       return {
-        tweet: tweet.caption,
+        tweet: tweet,
       };
     } catch (error) {
       return {

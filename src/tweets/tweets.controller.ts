@@ -8,20 +8,28 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TweetService } from './tweets.service';
 import { CreateTweetDto } from './dto/createTweet.dto';
 import { Public } from 'src/common/public.decorator';
 import { CreateCommentDto } from './dto/createComment.dto';
 import { UpdateCommentDto } from './dto/updateComment.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('tweets')
 export class TweetsController {
   constructor(private tweetService: TweetService) {}
 
   @Post('/create')
-  createTweet(@Body() dto: CreateTweetDto, @Req() req: any) {
-    return this.tweetService.createTweet(dto, req.user);
+  @UseInterceptors(FilesInterceptor('images', 10))
+  createTweet(
+    @Body() dto: CreateTweetDto,
+    @Req() req: any,
+    @UploadedFiles() images: Express.Multer.File[],
+  ) {
+    return this.tweetService.createTweet(dto, req.user, images);
   }
 
   @Public()
