@@ -97,10 +97,18 @@ export class TweetService {
 
   async deleteTweet(id: number) {
     try {
+      const tweet = await this.prismaService.tweet.findFirst({
+        where: {
+          id: id,
+        },
+      });
       await this.prismaService.tweet.delete({
         where: {
           id: id,
         },
+      });
+      tweet.imagesKey.map((key) => {
+        this.minioService.deleteImage(key);
       });
 
       return {

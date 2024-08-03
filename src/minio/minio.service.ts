@@ -31,10 +31,7 @@ export class MinioService {
     }
   }
 
-  async deleteUserProfile(
-    objectName: string,
-    bucketName: string = this.bucketName,
-  ) {
+  async deleteImage(objectName: string, bucketName: string = this.bucketName) {
     await this.client.removeObject(bucketName, objectName);
   }
 

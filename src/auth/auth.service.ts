@@ -64,7 +64,7 @@ export class AuthService {
         },
       });
 
-      await this.minioService.deleteUserProfile(user.twitterProfileKey);
+      await this.minioService.deleteImage(user.twitterProfileKey);
 
       return { message: `${user.username} is created` };
     } catch (error) {
