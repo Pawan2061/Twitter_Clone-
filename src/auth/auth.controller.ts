@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -55,5 +56,9 @@ export class AuthController {
   @Patch('/verify/:id')
   verifyUser(@Param('id') id: string) {
     return this.authService.verifyUser(id);
+  }
+  @Delete('/:id')
+  deleteUser(@Param('id') id: string) {
+    return this.authService.removeUser(id);
   }
 }

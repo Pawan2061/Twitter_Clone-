@@ -56,6 +56,24 @@ export class AuthService {
     }
   }
 
+  async removeUser(id: string) {
+    try {
+      const user = await this.prisma.user.delete({
+        where: {
+          id: id,
+        },
+      });
+
+      await this.minioService.deleteUserProfile(user.twitterProfileKey);
+
+      return { message: `${user.username} is created` };
+    } catch (error) {
+      return {
+        errorMessage: error,
+      };
+    }
+  }
+
   async login(dto: LoginDto): Promise<object> {
     try {
       const user = await this.prisma.user.findFirst({
